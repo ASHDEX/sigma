@@ -1,60 +1,60 @@
-# Sigma Detection Rules Collection
+# Sigma Detection Rules
 
-This repository contains a curated set of **Sigma detection rules** designed to identify real-world adversary behavior across Windows, cloud, and enterprise environments.
+Custom Sigma detection rules for identifying adversary behavior across Windows, cloud, and enterprise environments. Rules are SIEM-portable and mapped to the MITRE ATT&CK framework.
 
-Sigma is a generic signature format for detection logic that can be converted into SIEM-specific queries (such as Splunk, Elastic, Azure Sentinel, etc.). These rules are focused on practical threat detection scenarios and are built to support security teams in improving time-to-detect and time-to-respond.
+## Overview
 
----
+Sigma is an open, vendor-agnostic signature format for SIEM detection logic. Rules in this repository can be converted to platform-specific queries for Splunk, Microsoft Sentinel, Elastic SIEM, QRadar, and other compatible platforms using tools such as `sigmac` or `pySigma`.
 
-## 🚀 What This Is
+## Rule Categories
 
-This project provides:
-- **Original Sigma rules** for common and advanced attack techniques
-- Detection logic mapped to the **MITRE ATT&CK Framework**
-- Portable content usable in multiple detection platforms
-- Clear descriptions and use-case context for each rule
+| Category | Description |
+|---|---|
+| Credential Access | AS-REP Roasting, Kerberoasting, LSASS dumps, Pass the Hash |
+| Lateral Movement | PsExec, WMI execution, SMB-based propagation |
+| Privilege Escalation | Token impersonation, UAC bypass, service abuse |
+| Persistence | Registry run keys, scheduled tasks, startup folders |
+| Defense Evasion | PowerShell obfuscation, LOLBAS abuse, log clearing |
+| C2 & Exfiltration | Suspicious outbound connections, DNS tunneling |
+| Discovery | Network scanning, AD enumeration, account discovery |
 
-These rules are designed for use by:
-- Security Operations Center (SOC) analysts  
-- Detection engineers  
-- Threat hunters  
-- Incident response teams
+## Rule Structure
 
----
+Each rule follows the Sigma specification and includes:
 
-## 🧠 Why This Matters
+- `title` — human-readable rule name
+- `description` — detection context and adversary behavior
+- `logsource` — target log category and product
+- `detection` — condition logic with selection filters
+- `tags` — MITRE ATT&CK technique IDs (e.g., T1003, T1059)
+- `level` — severity (informational, low, medium, high, critical)
+- `falsepositives` — known benign activity that may trigger the rule
 
-Effective detection content:
-- **Reduces dwell time** of attackers
-- Helps SOC teams catch subtle attack patterns
-- Improves defensive coverage against known TTPs
-- Can be reused across environments and SIEM tools
+## Usage
 
-This repository aims to support defenders in building more robust detection pipelines, enabling better security outcomes across organizations.
+Convert rules to SIEM-specific queries using pySigma:
 
----
+```bash
+# Install pySigma
+pip install pySigma
 
-## 📦 Rules Included
+# Convert to Splunk SPL
+sigma convert -t splunk rules/credential_access/lsass_dump.yml
 
-Each rule includes:
-- Rule name and description  
-- Sigma detection logic  
-- ATT&CK technique mapping  
-- Severity and tag metadata  
+# Convert to KQL (Microsoft Sentinel)
+sigma convert -t microsoft365defender rules/lateral_movement/psexec_execution.yml
+```
 
-Example rule categories:
-- Credential access abuse  
-- Lateral movement  
-- PowerShell misuse  
-- Suspicious process execution  
-- Privilege escalation
+## Compatibility
 
-> See the `rules/` directory for all rule files and the associated metadata.
+Tested against the following platforms:
 
----
+- Microsoft Sentinel (KQL)
+- Splunk Enterprise Security (SPL)
+- Elastic SIEM (EQL / Lucene)
+- IBM QRadar (AQL)
 
-## 📁 Usage
+## Author
 
-1. Clone this repository locally:  
-   ```bash
-   git clone https://github.com/ASHDEX/sigma.git
+ASHDEX — Security Researcher & Architect | Detection Engineering
+[ashdex.com](https://ashdex.com)
